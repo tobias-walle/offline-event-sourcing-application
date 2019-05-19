@@ -1,10 +1,4 @@
-import express from 'express';
-
-const app = express();
-
-app.get('/', (req, res) => {
-  res.send('Hello');
-});
+import { app } from './express/app';
 
 const port = 8000;
 app.listen(port, () => {

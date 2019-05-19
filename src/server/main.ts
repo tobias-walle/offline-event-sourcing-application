@@ -1,4 +1,4 @@
-import { app } from './express/app';
+import { app } from './app';
 
 const port = 8000;
 app.listen(port, () => {

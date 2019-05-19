@@ -1,4 +1,4 @@
 import serverlessHttp from 'serverless-http/serverless-http';
-import { app } from '../express/app';
+import { app } from '../app';
 
 module.exports.handler = serverlessHttp(app);

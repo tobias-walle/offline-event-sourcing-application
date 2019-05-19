@@ -6,5 +6,23 @@
   "repository": "git@github.com:TobiasWalle/offline-event-sourcing-application.git",
   "author": "Tobias Walle",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "scripts": {
+    "build-server": "babel src/server -d dist/server --extensions '.ts'"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/plugin-transform-typescript": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/express": "^4.16.1",
+    "typescript": "^3.4.5",
+    "webpack": "^4.31.0"
+  },
+  "dependencies": {
+    "express": "^4.17.0"
+  }
 }

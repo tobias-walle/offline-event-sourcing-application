@@ -1,0 +1,10 @@
+{
+  "name": "offline-event-sourcing-application",
+  "version": "0.0.0",
+  "description": "An example app for offline syncing with event sourcing",
+  "main": "dist/server.js",
+  "repository": "git@github.com:TobiasWalle/offline-event-sourcing-application.git",
+  "author": "Tobias Walle",
+  "license": "MIT",
+  "private": true
+}

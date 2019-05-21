@@ -1,27 +1,20 @@
 import { Router } from 'express';
-import { Todo } from '../../shared/models/todo';
+import 'express-async-errors';
+import { TodoEvent } from '../../shared/events/todo-events';
+import { todoRepository } from '../repositories/todo-repository';
 
 export const todoRouter = Router();
 
-todoRouter.get("/", (req, res) => {
-  const todos: Todo[] = [
-    { name: 'Cleanup', isDone: false },
-    { name: 'Buy Groceries', isDone: false },
-  ];
-  res.send(todos);
+todoRouter.get("/", async (req, res) => {
+  res.status(200);
+  res.send(await todoRepository.getTodoState());
 });
 
-todoRouter.post("/", (req, res) => {
-  const todo = req.body;
-  console.log('CREATE TODO');
-});
-
-todoRouter.post("/:id", (req, res) => {
-  const todoId = req.params['id'];
-  console.log(`UPDATE TODO with id ${todoId}`);
-});
-
-todoRouter.delete("/:id", (req, res) => {
-  const todoId = req.params['id'];
-  console.log(`DELETE TODO with id ${todoId}`);
+todoRouter.post("/events", async (req, res, next) => {
+  if (!(req.body instanceof Array)) {
+    res.status(400).send();
+  }
+  const events: TodoEvent[] = req.body;
+  await todoRepository.addEvents(events);
+  res.status(204).send();
 });

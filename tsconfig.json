@@ -6,7 +6,10 @@
       "dom",
       "esnext"
     ],
-    "jsx": "preserve",
+    "types": [
+      "styled-components/cssprop"
+    ],
+    "jsx": "react",
     "outDir": "./tsc-out",
     "removeComments": false,
     "strict": true,

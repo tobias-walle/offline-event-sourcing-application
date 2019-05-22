@@ -4,12 +4,12 @@ import { TodoEvent } from '../../shared/events/todo-events';
 import { todoReducer } from '../../shared/reducers/todo-reducer';
 import { TodoState } from '../../shared/states/todo-state';
 
-interface TodoEventWithMetadata {
+export interface TodoEventWithMetadata {
   event: TodoEvent;
   isSynced: boolean;
 }
 
-interface UseTodoStateValue {
+export interface UseTodoStateValue {
   initialState: TodoState;
   currentState: TodoState;
   events: TodoEventWithMetadata[];

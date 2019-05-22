@@ -1,4 +1,5 @@
 # Offline event sourcing application example
+[![Netlify Status](https://api.netlify.com/api/v1/badges/1f614f2b-0fe4-45e5-91ce-05475b330aa2/deploy-status)](https://app.netlify.com/sites/offline-event-sourcing-application/deploys)
 
 This repository shows a proof of concept on how to use Event Sourcing to synchronise 
 offline apps with the server.

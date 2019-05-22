@@ -48,6 +48,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.19.0",
+    "constate": "^1.1.1",
     "express": "^4.17.0",
     "express-async-errors": "^3.1.1",
     "netlify-lambda": "^1.4.10",

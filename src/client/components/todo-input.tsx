@@ -1,11 +1,9 @@
 import React, { ChangeEventHandler, FormEvent, useCallback, useState } from 'react';
-import { Todo as TodoModel } from '../../shared/models/todo';
+import { EventType } from '../../shared/events/event-type';
+import { useTodoStateContext } from '../hooks/use-todo-state-context';
 
-export interface TodoInputProps {
-  onAddTodo: (todo: TodoModel) => void;
-}
-
-export function TodoInput({ onAddTodo }: TodoInputProps) {
+export function TodoInput() {
+  const { emitEvent } = useTodoStateContext();
   const [name, setName] = useState('');
 
   const resetForm = useCallback(() => {
@@ -16,14 +14,13 @@ export function TodoInput({ onAddTodo }: TodoInputProps) {
     event.preventDefault();
     event.stopPropagation();
 
-    const newTodo: TodoModel = {
-      name,
-      isDone: false
-    };
-    onAddTodo(newTodo);
+    emitEvent({
+      type: EventType.ADD_TODO,
+      name
+    });
 
     resetForm();
-  }, [name, onAddTodo]);
+  }, [name, emitEvent]);
 
   return (
     <form onSubmit={handleSubmit}>

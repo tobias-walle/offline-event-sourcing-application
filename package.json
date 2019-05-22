@@ -13,9 +13,12 @@
     "start-client": "webpack-dev-server --config ./webpack.config.ts",
     "build": "run-s clean build-client build-server build-functions",
     "build-functions": "netlify-lambda build dist/server/aws-functions",
-    "build-server": "babel src/server -d dist/server --extensions '.ts'",
+    "build-server": "run-p _build-shared _build-server",
+    "_build-server": "babel src/server -d dist/server --extensions '.ts'",
+    "_build-shared": "babel src/shared -d dist/shared --extensions '.ts'",
     "build-client": "webpack --config ./webpack.config.ts --mode=production",
-    "clean": "shx rm -rf ./dist"
+    "clean": "shx rm -rf ./dist",
+    "validate-typescript": "tsc --noEmit -p ./tsconfig.json"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",

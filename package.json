@@ -14,7 +14,7 @@
     "build": "run-s clean build-client build-server build-functions",
     "build-functions": "netlify-lambda build dist/server/aws-functions",
     "build-server": "babel src/server -d dist/server --extensions '.ts'",
-    "build-client": "shx mkdir -p ./dist/client && shx cp -r ./src/client ./dist",
+    "build-client": "webpack --config ./webpack.config.ts --mode=production",
     "clean": "shx rm -rf ./dist"
   },
   "devDependencies": {

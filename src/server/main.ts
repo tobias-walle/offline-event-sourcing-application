@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import { app } from './app';
 
 const port = 8000;

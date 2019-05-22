@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import 'express-async-errors';
 import { TodoEvent } from '../../shared/events/todo-events';
 import { todoRepository } from '../repositories/todo-repository';
 

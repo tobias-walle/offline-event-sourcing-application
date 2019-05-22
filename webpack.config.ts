@@ -1,3 +1,4 @@
+import 'webpack-dev-server';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 import { Configuration } from 'webpack';
@@ -10,6 +11,11 @@ const webpackConfig: Configuration = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
+  },
+  devServer: {
+    proxy: {
+      '/.netlify': 'http://localhost:8000'
+    }
   },
   module: {
     rules: [

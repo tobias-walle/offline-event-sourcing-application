@@ -38,6 +38,6 @@ const ContentWrapper = styled.div`
 const DebugWrapper = styled.div`
     padding: 1rem;
     height: 100%;
-    flex: 0 0 300px;
+    flex: 0 0 400px;
     border-left: 1px solid rgba(0, 0, 0, .1);
 `;

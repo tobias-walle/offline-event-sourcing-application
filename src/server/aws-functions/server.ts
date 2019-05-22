@@ -1,5 +1,3 @@
-import 'babel-polyfill';
-
 import serverlessHttp from 'serverless-http/serverless-http';
 import { app } from '../app';
 

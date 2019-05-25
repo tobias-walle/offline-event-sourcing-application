@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 import { TodoEventWithMetadata, useTodoStateContext } from '../hooks/use-todo-state-context';
 
 export function DebugView() {
-  const { initialState, currentState, events, syncEventsWithApi, resetEvents } = useTodoStateContext();
+  const { initialState, currentState, events, syncEventsWithApi, resetServerState, resetLocalEvents } = useTodoStateContext();
   return (
     <Wrapper>
       <h1>Debug</h1>
@@ -17,7 +17,8 @@ export function DebugView() {
         disabled={events.length === 0}
       >Sync
       </StyledButton>
-      <StyledButton onClick={resetEvents}>Reset Server State</StyledButton>
+      <StyledButton onClick={resetServerState}>Reset Server State</StyledButton>
+      <StyledButton onClick={resetLocalEvents}>Reset Local Events</StyledButton>
       {events.map((e, i) => <EventPreview key={i} event={e}/>)}
       <h2>Current Local State</h2>
       <StatePreview state={currentState}/>
@@ -151,7 +152,8 @@ function EventPreviewEntry({ name, value }: EventPreviewEntryProps) {
           font-weight: bold;
           margin-right: .5rem;
         `}
-      >{name}:</div>
+      >{name}:
+      </div>
       <div
         css={css`
           color: #00A0BE

@@ -15,7 +15,8 @@ export interface UseTodoStateValue {
   currentState?: TodoState;
   events: TodoEventWithMetadata[];
   emitEvent: (event: TodoEvent) => void;
-  resetEvents: () => void;
+  resetServerState: () => void;
+  resetLocalEvents: () => void;
   syncEventsWithApi: () => Promise<void>;
   isLoadingState: boolean;
   isUploadingEvents: boolean;
@@ -56,6 +57,10 @@ function useTodoState(): UseTodoStateValue {
     setIsLoadingState(false);
   }, [api, setInitialState, setIsLoadingState]);
 
+  const resetLocalEvents = useCallback(async () => {
+    setEvents([]);
+  }, [setEvents]);
+
   // Load initial state from api
   useEffect(() => {
     syncEventsWithApi().catch(console.error);
@@ -66,7 +71,8 @@ function useTodoState(): UseTodoStateValue {
     currentState,
     events,
     emitEvent,
-    resetEvents,
+    resetServerState: resetEvents,
+    resetLocalEvents,
     syncEventsWithApi,
     isLoadingState,
     isUploadingEvents

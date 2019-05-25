@@ -20,4 +20,5 @@ todoRouter.post("/events", async (req, res) => {
 
 todoRouter.delete("/events", async (req, res) => {
   await todoRepository.deleteAllEvents();
+  res.status(204).send();
 });

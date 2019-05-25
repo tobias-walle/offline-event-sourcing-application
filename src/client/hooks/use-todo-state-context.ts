@@ -17,12 +17,14 @@ export interface UseTodoStateValue {
   emitEvent: (event: TodoEvent) => void;
   resetEvents: () => void;
   syncEventsWithApi: () => Promise<void>;
-  isSyncing: boolean;
+  isLoadingState: boolean;
+  isUploadingEvents: boolean;
 }
 
 function useTodoState(): UseTodoStateValue {
   const [initialState, setInitialState] = useState<TodoState>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingState, setIsLoadingState] = useState(false);
+  const [isUploadingEvents, setIsUploadingEvents] = useState(false);
   const [events, setEvents] = useState<TodoEventWithMetadata[]>([]);
 
   const currentState = useMemo(() => (
@@ -34,17 +36,25 @@ function useTodoState(): UseTodoStateValue {
   }, [setEvents, events]);
 
   const syncEventsWithApi = useCallback(async () => {
-    setIsLoading(true);
+    setIsUploadingEvents(true);
     await api.uploadTodoEvents(events.map(e => e.event));
+    setEvents(events.map(e => ({ ...e, isSynced: true })));
+    setIsUploadingEvents(false);
+
+    setIsLoadingState(true);
     const state = await api.getTodoState();
     setEvents([]);
     setInitialState(state);
-    setIsLoading(false);
-  }, [setInitialState, events, setEvents, api]);
+    setIsLoadingState(false);
+  }, [setInitialState, events, setEvents, api, setIsUploadingEvents, setIsLoadingState]);
 
   const resetEvents = useCallback(async () => {
+    setIsLoadingState(true);
     await api.resetTodoEvents();
-  }, [api]);
+    const state = await api.getTodoState();
+    setInitialState(state);
+    setIsLoadingState(false);
+  }, [api, setInitialState, setIsLoadingState]);
 
   // Load initial state from api
   useEffect(() => {
@@ -58,7 +68,8 @@ function useTodoState(): UseTodoStateValue {
     emitEvent,
     resetEvents,
     syncEventsWithApi,
-    isSyncing: isLoading
+    isLoadingState,
+    isUploadingEvents
   }
 }
 

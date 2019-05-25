@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 import { TodoEventWithMetadata, useTodoStateContext } from '../hooks/use-todo-state-context';
 
 export function DebugView() {
-  const { isSyncing, initialState, currentState, events, syncEventsWithApi, resetEvents } = useTodoStateContext();
+  const { initialState, currentState, events, syncEventsWithApi, resetEvents } = useTodoStateContext();
   return (
     <Wrapper>
       <h1>Debug</h1>
@@ -61,8 +61,8 @@ interface StatePreviewProps {
 }
 
 function StatePreview({ state }: StatePreviewProps) {
-  const { isSyncing } = useTodoStateContext();
-  if (!state || isSyncing) {
+  const { isLoadingState } = useTodoStateContext();
+  if (!state || isLoadingState) {
     return (
       <div css={css`
         display: flex;
@@ -89,7 +89,7 @@ export interface EventPreviewProps {
 }
 
 function EventPreview({ event }: EventPreviewProps) {
-  const { isSyncing } = useTodoStateContext();
+  const { isUploadingEvents } = useTodoStateContext();
   return (
     <div
       css={css`
@@ -97,7 +97,7 @@ function EventPreview({ event }: EventPreviewProps) {
         margin-top: 1rem;
       `}
     >
-      <IsSyncedDisplay isSyncing={isSyncing} isSynced={event.isSynced}/>
+      <IsSyncedDisplay isSyncing={isUploadingEvents} isSynced={event.isSynced}/>
       <div
         css={css`
           padding: .5rem;

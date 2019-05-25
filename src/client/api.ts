@@ -8,5 +8,8 @@ export const api = {
   getTodoState: (): Promise<TodoState> => axios.get(`${baseUrl}/todos`).then(r => r.data),
   uploadTodoEvents: (events: TodoEvent[]): Promise<void> => axios
     .post(`${baseUrl}/todos/events`, events)
+    .then(r => r.data),
+  resetTodoEvents: (): Promise<void> => axios
+    .delete(`${baseUrl}/todos/events`)
     .then(r => r.data)
 };

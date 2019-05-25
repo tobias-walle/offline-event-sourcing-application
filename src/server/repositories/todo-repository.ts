@@ -11,6 +11,14 @@ export class TodoRepository {
     await saveToJsonBin(db);
   }
 
+  public async deleteAllEvents(): Promise<void> {
+    const db = await getFromJsonBin();
+    await saveToJsonBin({
+      ...db,
+      todoEvents: []
+    });
+  }
+
   public async getTodoState(): Promise<TodoState> {
     const db = await getFromJsonBin();
     return db.todoEvents.reduce(todoReducer, []);

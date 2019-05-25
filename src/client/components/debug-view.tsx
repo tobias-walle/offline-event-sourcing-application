@@ -3,33 +3,39 @@ import { css } from 'styled-components';
 import { TodoEventWithMetadata, useTodoStateContext } from '../hooks/use-todo-state-context';
 
 export function DebugView() {
-  const { initialState, currentState, serverState, events, syncEventsWithApi } = useTodoStateContext();
+  const { isSyncing, initialState, currentState, events, syncEventsWithApi, resetEvents } = useTodoStateContext();
   return (
     <div>
       <h1>Debug</h1>
       <h2>Initial State</h2>
-      <StatePreview state={initialState}/>
+      <StatePreview isLoading={isSyncing} state={initialState}/>
       <h2>Events</h2>
       <button
         onClick={syncEventsWithApi}
         disabled={events.length === 0}
-      >Sync</button>
+      >Sync
+      </button>
+      <button onClick={resetEvents}>Reset Server State</button>
       {events.map((e, i) => <EventPreview key={i} event={e}/>)}
       <h2>Current Local State</h2>
       <StatePreview state={currentState}/>
-      <h2>Current Server State</h2>
-      <StatePreview state={serverState}/>
     </div>
   );
 }
 
 interface StatePreviewProps {
-  state: object;
+  isLoading?: boolean;
+  state?: object;
 }
 
-function StatePreview({ state }: StatePreviewProps) {
+function StatePreview({ state, isLoading }: StatePreviewProps) {
+  if (!state) {
+    return null;
+  }
   return (
-    <pre>{JSON.stringify(state, null, 2)}</pre>
+    <pre style={{
+      color: isLoading ? 'grey' : 'inherit'
+    }}>{JSON.stringify(state, null, 2)}</pre>
   )
 }
 
@@ -38,6 +44,7 @@ export interface EventPreviewProps {
 }
 
 function EventPreview({ event }: EventPreviewProps) {
+  const { isSyncing } = useTodoStateContext();
   return (
     <div
       css={css`
@@ -46,17 +53,18 @@ function EventPreview({ event }: EventPreviewProps) {
         margin-bottom: .5rem;
       `}
     >
-      <IsSyncedDisplay isSynced={event.isSynced}/>
+      <IsSyncedDisplay isSyncing={isSyncing} isSynced={event.isSynced}/>
       <pre>{JSON.stringify(event.event, null, 2)}</pre>
     </div>
   );
 }
 
 interface IsSyncedDisplayProps {
+  isSyncing: boolean;
   isSynced: boolean;
 }
 
-function IsSyncedDisplay({ isSynced }: IsSyncedDisplayProps) {
+function IsSyncedDisplay({ isSyncing, isSynced }: IsSyncedDisplayProps) {
   return (
     <div css={css`
       text-align: center;
@@ -64,7 +72,11 @@ function IsSyncedDisplay({ isSynced }: IsSyncedDisplayProps) {
       padding: .3rem;
       border-radius: 4px;
     `}>{
-      isSynced ? 'Synced' : 'Not Synced'
+      isSynced
+        ? 'Synced'
+        : isSyncing
+        ? 'Synchronize...'
+        : 'Not Synced'
     }</div>
   );
 }

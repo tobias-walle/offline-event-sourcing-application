@@ -9,11 +9,15 @@ todoRouter.get("/", async (req, res) => {
   res.send(await todoRepository.getTodoState());
 });
 
-todoRouter.post("/events", async (req, res, next) => {
+todoRouter.post("/events", async (req, res) => {
   if (!(req.body instanceof Array)) {
     res.status(400).send();
   }
   const events: TodoEvent[] = req.body;
   await todoRepository.addEvents(events);
   res.status(204).send();
+});
+
+todoRouter.delete("/events", async (req, res) => {
+  await todoRepository.deleteAllEvents();
 });

@@ -11,50 +11,54 @@ export interface TodoEventWithMetadata {
 }
 
 export interface UseTodoStateValue {
-  initialState: TodoState;
-  currentState: TodoState;
-  serverState: TodoState;
+  initialState?: TodoState;
+  currentState?: TodoState;
   events: TodoEventWithMetadata[];
   emitEvent: (event: TodoEvent) => void;
+  resetEvents: () => void;
   syncEventsWithApi: () => Promise<void>;
+  isSyncing: boolean;
 }
 
 function useTodoState(): UseTodoStateValue {
-  const [initialState, setInitialState] = useState<TodoState>([]);
-  const [serverState, setServerState] = useState<TodoState>([]);
+  const [initialState, setInitialState] = useState<TodoState>();
+  const [isLoading, setIsLoading] = useState(false);
   const [events, setEvents] = useState<TodoEventWithMetadata[]>([]);
 
-  // Load initial state from api
-  useEffect(() => {
-    api.getTodoState().then(state => {
-      setInitialState(state);
-      setServerState(state);
-    });
-  }, []);
-
   const currentState = useMemo(() => (
-    events.map(e => e.event).reduce(todoReducer, initialState)
+    initialState && events.map(e => e.event).reduce(todoReducer, initialState)
   ), [events, initialState]);
 
   const emitEvent = useCallback((event: TodoEvent) => {
     setEvents([...events, { event, isSynced: false }]);
   }, [setEvents, events]);
 
-
   const syncEventsWithApi = useCallback(async () => {
+    setIsLoading(true);
     await api.uploadTodoEvents(events.map(e => e.event));
-    const serverState = await api.getTodoState();
-    setEvents(events.map(e => ({ ...e, isSynced: true })));
-    setServerState(serverState);
-  }, [setInitialState, events, setEvents]);
+    const state = await api.getTodoState();
+    setEvents([]);
+    setInitialState(state);
+    setIsLoading(false);
+  }, [setInitialState, events, setEvents, api]);
+
+  const resetEvents = useCallback(async () => {
+    await api.resetTodoEvents();
+  }, [api]);
+
+  // Load initial state from api
+  useEffect(() => {
+    syncEventsWithApi().catch(console.error);
+  }, []);
 
   return {
     initialState,
     currentState,
-    serverState,
     events,
     emitEvent,
-    syncEventsWithApi
+    resetEvents,
+    syncEventsWithApi,
+    isSyncing: isLoading
   }
 }
 

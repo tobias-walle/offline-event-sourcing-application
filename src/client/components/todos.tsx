@@ -3,7 +3,7 @@ import { useTodoStateContext } from '../hooks/use-todo-state-context';
 import { Todo } from './todo';
 
 export function Todos() {
-  const { currentState } = useTodoStateContext();
+  const { currentState = [] } = useTodoStateContext();
 
   return (
     <div>

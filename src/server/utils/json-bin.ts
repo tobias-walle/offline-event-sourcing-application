@@ -4,7 +4,7 @@ import { Event } from '../../shared/events/event';
 
 const jsonBinUrl = 'https://api.jsonbin.io/b/5ce44efadbffad51f8ad0ee4';
 
-interface JsonBin {
+export interface JsonBin {
   todoEvents: Event[];
 }
 

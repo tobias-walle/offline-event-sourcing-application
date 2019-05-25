@@ -26,16 +26,23 @@ const AppHeader = styled.h1`
 `;
 
 const Wrapper = styled.div`
+    overflow: hidden;
     display: flex;
     height: 100vh;
 `;
 
 const ContentWrapper = styled.div`
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ecf3f1;
     padding: 1rem;
     flex: 1 1 0;
 `;
 
 const DebugWrapper = styled.div`
+    overflow: auto;
     padding: 1rem;
     height: 100%;
     flex: 0 0 400px;

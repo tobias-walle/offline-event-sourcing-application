@@ -60,6 +60,8 @@
     "netlify-lambda": "^1.4.10",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-json-view": "^1.19.1",
+    "react-spinners": "^0.5.4",
     "serverless-http": "^2.0.2",
     "styled-components": "^4.2.0"
   }

@@ -1,41 +1,86 @@
 import React from 'react';
-import { css } from 'styled-components';
+import ReactJson from 'react-json-view'
+import { SyncLoader } from 'react-spinners';
+import styled, { css } from 'styled-components';
 import { TodoEventWithMetadata, useTodoStateContext } from '../hooks/use-todo-state-context';
 
 export function DebugView() {
   const { isSyncing, initialState, currentState, events, syncEventsWithApi, resetEvents } = useTodoStateContext();
   return (
-    <div>
+    <Wrapper>
       <h1>Debug</h1>
       <h2>Initial State</h2>
-      <StatePreview isLoading={isSyncing} state={initialState}/>
+      <StatePreview state={initialState}/>
       <h2>Events</h2>
-      <button
+      <StyledButton
         onClick={syncEventsWithApi}
         disabled={events.length === 0}
       >Sync
-      </button>
-      <button onClick={resetEvents}>Reset Server State</button>
+      </StyledButton>
+      <StyledButton onClick={resetEvents}>Reset Server State</StyledButton>
       {events.map((e, i) => <EventPreview key={i} event={e}/>)}
       <h2>Current Local State</h2>
       <StatePreview state={currentState}/>
-    </div>
+    </Wrapper>
   );
 }
 
+const Wrapper = styled.div`
+    h2 {
+      font-size: 1.1rem;
+      margin-bottom: .1rem;
+    }
+`;
+
+const StyledButton = styled.button`
+    padding: .3rem .5rem;
+    margin: 0 .3rem;
+    cursor: pointer;
+    background: white;
+    font-size: .8rem;
+    border: 1px solid rgba(0, 0, 0, .1);
+    border-radius: 3px;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled) {
+      &:hover, &:focus {
+        background: rgba(0, 0, 0, .05);
+      }
+    }
+`;
+
 interface StatePreviewProps {
-  isLoading?: boolean;
   state?: object;
 }
 
-function StatePreview({ state, isLoading }: StatePreviewProps) {
-  if (!state) {
-    return null;
+function StatePreview({ state }: StatePreviewProps) {
+  const { isSyncing } = useTodoStateContext();
+  if (!state || isSyncing) {
+    return (
+      <div css={css`
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      `}>
+        <SyncLoader color="grey" size={8}/>
+      </div>
+    );
   }
   return (
-    <pre style={{
-      color: isLoading ? 'grey' : 'inherit'
-    }}>{JSON.stringify(state, null, 2)}</pre>
+    <ReactJson
+      name={null}
+      src={state}
+      collapsed={false}
+      displayDataTypes={false}
+      displayObjectSize={false}
+    />
   )
 }
 
@@ -49,12 +94,20 @@ function EventPreview({ event }: EventPreviewProps) {
     <div
       css={css`
         border: 1px solid rgba(0, 0, 0, .1);
-        padding: .5rem;
-        margin-bottom: .5rem;
+        margin-top: 1rem;
       `}
     >
       <IsSyncedDisplay isSyncing={isSyncing} isSynced={event.isSynced}/>
-      <pre>{JSON.stringify(event.event, null, 2)}</pre>
+      <div
+        css={css`
+          padding: .5rem;
+        `}
+      >
+        {
+          Object.entries(event.event)
+            .map(([key, value]) => <EventPreviewEntry key={key} name={key} value={value}/>)
+        }
+      </div>
     </div>
   );
 }
@@ -69,8 +122,9 @@ function IsSyncedDisplay({ isSyncing, isSynced }: IsSyncedDisplayProps) {
     <div css={css`
       text-align: center;
       color: ${isSynced ? 'green' : 'grey'};
-      padding: .3rem;
-      border-radius: 4px;
+      background: rgba(0, 0, 0, .03);
+      padding: .1rem;
+      font-size: .8rem;
     `}>{
       isSynced
         ? 'Synced'
@@ -78,6 +132,32 @@ function IsSyncedDisplay({ isSyncing, isSynced }: IsSyncedDisplayProps) {
         ? 'Synchronize...'
         : 'Not Synced'
     }</div>
+  );
+}
+
+export interface EventPreviewEntryProps {
+  name: string;
+  value: any;
+}
+
+function EventPreviewEntry({ name, value }: EventPreviewEntryProps) {
+  console.log(name, value);
+  return (
+    <div css={css`
+      display: flex;
+    `}>
+      <div
+        css={css`
+          font-weight: bold;
+          margin-right: .5rem;
+        `}
+      >{name}:</div>
+      <div
+        css={css`
+          color: #00A0BE
+        `}
+      >{value}</div>
+    </div>
   );
 }
 

@@ -10,12 +10,10 @@
   "scripts": {
     "start": "run-p start-server start-client",
     "start-server": "ts-node-dev --respawn --transpileOnly src/server/main.ts",
+    "start-functions": "netlify-lambda serve --config webpack.functions.js src/server/aws-functions",
     "start-client": "webpack-dev-server --config ./webpack.config.ts",
     "build": "run-s clean build-client build-functions",
-    "build-functions": "netlify-lambda build src/server/aws-functions",
-    "build-server": "run-p _build-shared _build-server",
-    "_build-server": "babel src/server -d dist/server --extensions '.ts'",
-    "_build-shared": "babel src/shared -d dist/shared --extensions '.ts'",
+    "build-functions": "netlify-lambda build --config webpack.functions.js src/server/aws-functions",
     "build-client": "webpack --config ./webpack.config.ts --mode=production",
     "clean": "shx rm -rf ./dist",
     "validate-typescript": "tsc --noEmit -p ./tsconfig.json"
@@ -25,6 +23,7 @@
     "@babel/core": "^7.4.4",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/plugin-transform-typescript": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@babel/preset-react": "^7.0.0",
@@ -37,6 +36,7 @@
     "@types/styled-components": "^4.1.15",
     "@types/webpack": "^4.4.31",
     "@types/webpack-dev-server": "^3.1.5",
+    "@types/webpack-node-externals": "^1.6.3",
     "babel-loader": "^8.0.6",
     "babel-plugin-styled-components": "^1.10.0",
     "html-webpack-plugin": "^3.2.0",
@@ -46,13 +46,15 @@
     "typescript": "^3.4.5",
     "webpack": "^4.31.0",
     "webpack-cli": "^3.3.2",
-    "webpack-dev-server": "^3.4.1"
+    "webpack-dev-server": "^3.4.1",
+    "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "@babel/runtime": "^7.4.5",
     "axios": "^0.18.0",
-    "babel-polyfill": "^6.26.0",
     "body-parser": "^1.19.0",
     "constate": "^1.1.1",
+    "core-js": "3",
     "express": "^4.17.0",
     "express-async-errors": "^3.1.1",
     "netlify-lambda": "^1.4.10",

@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import 'express-async-errors';
 import { app } from './app';
 

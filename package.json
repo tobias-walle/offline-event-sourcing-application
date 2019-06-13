@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.4.5",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "constate": "^1.1.1",
     "core-js": "3",
